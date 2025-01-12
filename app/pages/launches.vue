@@ -46,6 +46,8 @@
               </router-link>
             </v-card-text>
             <strong v-if="launch.details">Details:</strong> {{ launch.details }}
+            <br />
+            <strong>Countdown:</strong> {{ countdownTimers[launch.id] }}
           </v-card-text>
         </v-card>
       </v-col>
@@ -59,8 +61,8 @@ import gql from 'graphql-tag';
 import { ref } from 'vue';
 import { useLaunchFilter } from '../composables/useLaunchFilter';
 import { useLaunchSort } from '../composables/useLaunchSort';
+import { useCountdown } from '../composables/useCountdown';
 
-// GraphQL query to fetch launches
 const GET_LAUNCHES = gql`
   query {
     launches {
@@ -82,7 +84,7 @@ const GET_LAUNCHES = gql`
 `;
 
 definePageMeta({
-  layout: 'default', // Ensure this layout is applied
+  layout: 'default',
 });
 
 function applyFilter() {
@@ -101,6 +103,13 @@ const { filterYear, filteredLaunches, availableYears } = useLaunchFilter(launche
 
 // Sorting
 const { sortOrder, sortedLaunches } = useLaunchSort(filteredLaunches);
+
+// Countdown timers for each launch
+const countdownTimers = ref({});
+launches.value.forEach((launch) => {
+  const { remainingTime } = useCountdown(launch.launch_date_utc);
+  countdownTimers.value[launch.id] = remainingTime;
+});
 </script>
 
 <style scoped>
