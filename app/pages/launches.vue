@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <!-- Filters -->
     <v-row justify="end" align="center" class="mb-4">
       <v-col cols="12" md="3">
         <v-select
@@ -25,8 +24,6 @@
         ></v-select>
       </v-col>
     </v-row>
-
-    <!-- Launches List -->
     <v-row>
       <v-col v-for="launch in sortedLaunches" :key="launch.id" cols="12" md="6">
         <v-card>
@@ -104,7 +101,7 @@ const { filterYear, filteredLaunches, availableYears } = useLaunchFilter(launche
 // Sorting
 const { sortOrder, sortedLaunches } = useLaunchSort(filteredLaunches);
 
-// Countdown timers for each launch
+// Countdown
 const countdownTimers = ref({});
 launches.value.forEach((launch) => {
   const { remainingTime } = useCountdown(launch.launch_date_utc);
@@ -118,6 +115,6 @@ launches.value.forEach((launch) => {
 }
 
 .v-select {
-  font-size: 0.875rem; /* Reduce font size */
+  font-size: 0.875rem;
 }
 </style>

@@ -88,29 +88,26 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import { gql, useAsyncQuery } from '@vue/apollo-composable';
+import { useLazyQuery } from '@vue/apollo-composable';
+import gql from 'graphql-tag'; // Import gql from graphql-tag
 import { useCounter } from '../stores/useCounter';
 
 const store = useCounter();
 const selection = ref(0);
 
+// Define the GraphQL query with gql
 const query = gql`
-	query getShips {
-		ships {
-			id
-			name
-			active
-		}
-	}
+  query getShips {
+    ships {
+      id
+      name
+      active
+    }
+  }
 `;
 
-const { data } = useAsyncQuery<{
-	ships: {
-		id: string;
-		name: string;
-		active: boolean;
-	}[];
-}>(query);
+const { result, loading, error } = useLazyQuery(query); // Use useLazyQuery
 
-const ships = computed(() => data.value?.ships ?? []);
+const ships = computed(() => result.value?.ships ?? []);
 </script>
+
